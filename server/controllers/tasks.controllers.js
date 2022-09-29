@@ -6,10 +6,14 @@ const getTasks = (req, res) => {
 const getTask = (req, res) => {
     res.send('obteniendo tarea')
 }
-const createTask = (req, res) => {
+const createTask = async (req, res) => {
     const {tittle, description} = req.body;
-    connection.query(`INSERT INTO tasks(tittle, description) VALUES ("${tittle}","${description}")`);
-    res.send('creando tarea')
+    const [result] = await connection.query(`INSERT INTO tasks(tittle, description) VALUES ("${tittle}","${description}")`);
+    res.json({
+        insertedId: result.insertId,
+        tittle,
+        description,
+    })
 }
 const updateTask = (req, res) => {
     res.send('actualizando tarea')
