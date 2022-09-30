@@ -1,25 +1,57 @@
+//Llamar la conexion de la base de datos
 import { connection } from "../db.js";
 
-const getTasks = (req, res) => {
-    res.send('obteniendo tareas')
-}
-const getTask = (req, res) => {
-    res.send('obteniendo tarea')
-}
-const createTask = async (req, res) => {
-    const {tittle, description} = req.body;
-    const [result] = await connection.query(`INSERT INTO tasks(tittle, description) VALUES ("${tittle}","${description}")`);
-    res.json({
-        insertedId: result.insertId,
-        tittle,
-        description,
-    })
-}
-const updateTask = (req, res) => {
-    res.send('actualizando tarea')
-}
-const deleteTask = (req, res) => {
-    res.send('eliminando tarea')
-}
 
-export {getTask, getTasks, createTask, updateTask, deleteTask}
+//Hace un get a todas las tareas en la ruta (localhost:4000/tasks)
+const getTasks = async (req, res) => {
+  const [result] = await connection.query(
+    `SELECT * FROM tasks ORDER BY createdAt ASC`
+  );
+  res.json(result);
+};
+
+
+//Hace un get a una tarea en la ruta (localhost:4000/tasks/{id})
+const getTask = async (req, res) => {
+  const [result] = await connection.query(`SELECT * FROM tasks WHERE taskid = ${req.params.id}`);
+  if (result.length === 0){
+    return res.status(404).json({ error: 'Task not found' });
+  }
+  res.json(result[0]);
+};
+
+//Crea una nueva tarea en la ruta (localhost:4000/tasks)
+const createTask = async (req, res) => {
+  const { tittle, description, done = 0 } = req.body;
+  const [result] = await connection.query(
+    `INSERT INTO tasks(tittle, description, done) VALUES ("${tittle}","${description}", ${done})`
+  );
+  res.json({
+    insertedId: result.insertId,
+    tittle,
+    description,
+    done,
+  });
+};
+
+//Actualiza una tarea en la ruta (localhost:4000/tasks/{id})
+const updateTask = async (req, res) => {
+  const { tittle, description, done } = req.body;
+  const [result] = await connection.query(`UPDATE tasks SET tittle = "${tittle}", description = "${description}", done = ${done} WHERE taskid = ${req.params.id}`)
+  if(result.affectedRows === 0){
+    return res.status(404).json({ error: 'Task not found' });
+  }
+  res.json(result);
+};
+
+//Elimina una tarea en la ruta (localhost:4000/tasks/{id})
+const deleteTask = async (req, res) => {
+  const [result] = await connection.query(`DELETE FROM tasks WHERE taskid = ${req.params.id}`);
+  
+  if(result.affectedRows === 0){
+    return res.status(404).json({ error: 'Task not found' });
+  }
+  res.json(result);
+};
+
+export { getTask, getTasks, createTask, updateTask, deleteTask };
