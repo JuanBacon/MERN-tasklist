@@ -31,13 +31,13 @@ const getTask = async (req, res) => {
 // crea una nueva tarea en la ruta (localhost:4000/tasks)
 const createTask = async (req, res) => {
   try {
-    const { tittle, description, done = 0 } = req.body;
+    const { title, description, done = 0 } = req.body;
     const [result] = await connection.query(
-      `INSERT INTO tasks(tittle, description, done) VALUES ("${tittle}","${description}", ${done})`
+      `INSERT INTO tasks(title, description, done) VALUES ("${title}","${description}", ${done})`
     );
     res.json({
       insertedId: result.insertId,
-      tittle,
+      title,
       description,
       done,
     });  
@@ -49,8 +49,8 @@ const createTask = async (req, res) => {
 // actualiza una tarea en la ruta (localhost:4000/tasks/{id})
 const updateTask = async (req, res) => {
   try {
-    const { tittle, description, done } = req.body;
-    const [result] = await connection.query(`UPDATE tasks SET tittle = "${tittle}", description = "${description}", done = ${done} WHERE taskid = ${req.params.id}`)
+    const { title, description, done } = req.body;
+    const [result] = await connection.query(`UPDATE tasks SET title = "${title}", description = "${description}", done = ${done} WHERE taskid = ${req.params.id}`)
     if(result.affectedRows === 0){
       return res.status(404).json({ error: 'Task not found' });
     }
