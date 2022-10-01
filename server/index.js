@@ -3,9 +3,10 @@ import express from "express";
 import { PORT } from "./config.js";
 import indexRoutes from "./routes/index.routes.js";
 import taskRoutes from "./routes/tasks.routes.js";
-
+import cors from "cors";
 // crea una aplicacion express 
 const app = express();
+app.use(cors());
 // usa la funcion json de express para manejar los json en las respuestas del servidor 
 app.use(express.json());
 // usa los enrutadores en la aplicacion 

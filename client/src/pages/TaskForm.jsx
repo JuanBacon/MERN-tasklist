@@ -1,5 +1,7 @@
 import React from 'react'
 import { Form, Formik } from "formik";
+import { createTaskRequest } from "../API/task.api";
+
 const TaskForm = () => {
     return (
         <>
@@ -9,10 +11,16 @@ const TaskForm = () => {
                     title: "",
                     description: ""
                 }}
-                onSubmit={(values) => {
-                    console.log(values);
+                onSubmit={async (values, actions) => {
+                    try {
+                        const response = await createTaskRequest(values);
+                        console.log(response);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    actions.resetForm();
                 }}>
-                {({ handleChange, handleSubmit }) => (
+                {({ handleChange, handleSubmit,values, isSubmitting }) => (
                     <Form onSubmit={handleSubmit} >
                         <label>Title</label>
                         <br />
@@ -21,6 +29,7 @@ const TaskForm = () => {
                             name='title'
                             placeholder='Any title'
                             onChange={handleChange}
+                            value={values.title}
                         />
                         <br />
                         <label>Description</label>
@@ -30,9 +39,12 @@ const TaskForm = () => {
                             name='description'
                             placeholder='Any description'
                             onChange={handleChange}
+                            value={values.description}
                         />
                         <br />
-                        <button type='submit'>Save</button>
+                        <button type='submit' disabled={isSubmitting}>
+                            {isSubmitting ? 'saving...' : 'Save'}
+                        </button>
                     </Form>
                 )}
             </Formik>
