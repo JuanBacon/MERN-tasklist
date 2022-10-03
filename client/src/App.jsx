@@ -1,21 +1,20 @@
 import './App.css'
 import { Route, Routes } from "react-router-dom";
-import TaskPages from './pages/Taskspages';
+import TaskPages from './pages/TasksPages';
 import TaskForm from './pages/TaskForm';
 import NotFound from './pages/NotFound';
 import NavBar from './components/NavBar';
-import { Fragment } from 'react';
-
+import { TaskContextProvider } from './context/TaskContext';
 const App = () => {
   return (
-    <Fragment>
+    <TaskContextProvider>
       <NavBar />
       <Routes>
         <Route path="/" element={<TaskPages />} />
         <Route path="/new" element={<TaskForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </Fragment>
+    </TaskContextProvider>
   )
 }
 

@@ -1,19 +1,24 @@
 // llamar la conexion de la base de datos
 import { connection } from "../db.js";
 
-
+const convertDate = (date) => {
+  return (new Date ((new Date((new Date(date)).toISOString() )).getTime() - ((new Date()).getTimezoneOffset()*60000))).toISOString().slice(0, 19).replace('T', ' ');
+}
 // hace un get a todas las tareas en la ruta (localhost:4000/tasks)
 const getTasks = async (req, res) => {
   try {
     const [result] = await connection.query(
       `SELECT * FROM tasks ORDER BY createdAt ASC`
     );
+    //Transformar sentencia for en un map. (si es posible)
+    for(let i = 0; i < result.length; i++){  
+      result[i].createdAt = convertDate(result[i].createdAt);
+    }
     res.json(result);
   } catch (error) {
     return res.status(500).json({error: error});
   }
 };
-
 
 // hace un get a una tarea en la ruta (localhost:4000/tasks/{id})
 const getTask = async (req, res) => {
@@ -22,6 +27,7 @@ const getTask = async (req, res) => {
     if (result.length === 0){
       return res.status(404).json({ error: 'Task not found' });
     }
+    result[0].createdAt = convertDate(result[0].createdAt);
     res.json(result[0]);
   } catch (error) {
     return res.status(500).json({error: error});
@@ -32,14 +38,16 @@ const getTask = async (req, res) => {
 const createTask = async (req, res) => {
   try {
     const { title, description, done = 0 } = req.body;
+    const createdAt = convertDate(new Date());
     const [result] = await connection.query(
-      `INSERT INTO tasks(title, description, done) VALUES ("${title}","${description}", ${done})`
+      `INSERT INTO tasks(title, description, done, createdAt) VALUES ("${title}","${description}", ${done}, "${createdAt}")`
     );
     res.json({
-      insertedId: result.insertId,
+      taskid: result.insertId,
       title,
       description,
       done,
+      createdAt
     });  
   } catch (error) {
     return res.status(500).json({error: error});

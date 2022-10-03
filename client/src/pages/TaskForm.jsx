@@ -1,28 +1,25 @@
 import React from 'react'
 import { Form, Formik } from "formik";
-import { createTaskRequest } from "../API/task.api";
+import { useTasks } from '../context/TaskContext';
 
 const TaskForm = () => {
+
+    const {createTask} = useTasks();
     return (
         <>
             <h1>Add a task</h1>
             <Formik
                 initialValues={{
                     title: "",
-                    description: ""
+                    description: "",
                 }}
                 onSubmit={async (values, actions) => {
-                    try {
-                        const response = await createTaskRequest(values);
-                        console.log(response);
-                    } catch (error) {
-                        console.log(error);
-                    }
+                    createTask(values);
                     actions.resetForm();
                 }}>
                 {({ handleChange, handleSubmit,values, isSubmitting }) => (
                     <Form onSubmit={handleSubmit} >
-                        <label>Title</label>
+                        <label>Title*</label>
                         <br />
                         <input
                             type="text"
