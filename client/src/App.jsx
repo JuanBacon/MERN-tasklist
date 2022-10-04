@@ -7,15 +7,19 @@ import NavBar from './components/NavBar';
 import { TaskContextProvider } from './context/TaskContext';
 const App = () => {
   return (
-    <TaskContextProvider>
+    <div className='bg-zinc-900 h-screen'>
       <NavBar />
-      <Routes>
-        <Route path="/" element={<TaskPages />} />
-        <Route path="/new" element={<TaskForm key='new-task'/>} />
-        <Route path='/edit/:id' element={<TaskForm key= 'edit-task' />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TaskContextProvider>
+      <div className="container mx-auto py-4">
+      <TaskContextProvider>
+        <Routes>
+          <Route path="/" element={<TaskPages />} />
+          <Route path="/new" element={<TaskForm key='new-task'/>} />
+          <Route path='/edit/:id' element={<TaskForm key= 'edit-task' />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TaskContextProvider>
+      </div>
+    </div>
   )
 }
 
