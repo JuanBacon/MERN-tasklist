@@ -1,2 +1,3 @@
 // puerto seleccionado para el backend
-export const PORT = 4000;
+var port_number = server.listen(process.env.PORT || 3000);
+export const PORT = port_number;
