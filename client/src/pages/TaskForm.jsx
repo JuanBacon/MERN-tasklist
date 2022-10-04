@@ -11,7 +11,8 @@ function TaskForm() {
 
     const [task, setTask] = useState({
         title: "",
-        description: ""
+        description: "",
+        done: 0
     });
     const { createTask, loadTask, updateTask } = useTasks();
 
@@ -19,16 +20,21 @@ function TaskForm() {
         console.log("builded component");
         const retrieveData = async () => {
             if (params.id) {
-                const response = await loadTask(params.id);
-                setTask({
-                    title: response.title,
-                    description: response.description
-                })
-            } else {
-                setTask({
-                    title: "",
-                    description: ""
-                });
+                try {
+                    const response = await loadTask(params.id);
+                    setTask({
+                        title: response.title,
+                        description: response.description,
+                        done: response.done
+                    })
+                } catch (error) {
+                    console.log(error);
+                    setTask({
+                        title: "",
+                        description: "",
+                        done: 0
+                    });
+                }
             }
         };
         retrieveData();
@@ -52,7 +58,8 @@ function TaskForm() {
                     }
                     setTask({
                         title: "", 
-                        description: ""
+                        description: "",
+                        done: 0
                     })
                 } }>
                 {({ handleChange, handleSubmit, values, isSubmitting }) => (

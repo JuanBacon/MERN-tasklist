@@ -74,7 +74,20 @@ export const useProvideTasks = () => {
             console.error(error);
         }
     }
+    const toggleTaskDone = async (id) => {
+        try{
+            const taskFound = tasks.find((task) => task.taskid === id);
+            taskFound.done = taskFound.done == 0 ? 1 : 0;
+            const response = await updateTaskRequest(id, taskFound);
+            console.log(response);
+            setTasks(
+                [... tasks]
+            );
+        }catch (error){
+            console.error(error);
+        }
+    }
     return {
-        tasks, loadTasks, loadTask, deleteTask, createTask, updateTask
+        tasks, loadTasks, loadTask, deleteTask, createTask, updateTask, toggleTaskDone
     }
 }

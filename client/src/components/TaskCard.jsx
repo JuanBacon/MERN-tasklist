@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const TaskCard = ({task}) => {
 
-    const {deleteTask} = useTasks();
+    const {deleteTask, toggleTaskDone} = useTasks();
     const navigate = useNavigate();
 
     return (
@@ -13,11 +13,14 @@ const TaskCard = ({task}) => {
             <p>{task.description}</p>
             <span>{task.done == 1 ? '✔' : '❌'}</span>
             <p>{new Date(task.createdAt).toString()}</p>
-            <button onClick={() => deleteTask(task.taskid)}>
+            <button onClick={async () => await deleteTask(task.taskid)}>
                 Delete
             </button>
             <button onClick={() => navigate(`/edit/${task.taskid}`)}>
                 Edit
+            </button>
+            <button onClick={async () => await toggleTaskDone(task.taskid)}>
+                Toggle task
             </button>
         </div>
     )
