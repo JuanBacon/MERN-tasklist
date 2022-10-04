@@ -2,6 +2,7 @@
 import { connection } from "../db.js";
 
 const convertDate = (date) => {
+  //Convierte una fecha en el timezone actual y la formatea en TimeStamp para la base de datos
   return (new Date ((new Date((new Date(date)).toISOString() )).getTime() - ((new Date()).getTimezoneOffset()*60000))).toISOString().slice(0, 19).replace('T', ' ');
 }
 // hace un get a todas las tareas en la ruta (localhost:4000/tasks)
@@ -57,7 +58,7 @@ const createTask = async (req, res) => {
 // actualiza una tarea en la ruta (localhost:4000/tasks/{id})
 const updateTask = async (req, res) => {
   try {
-    const { title, description, done } = req.body;
+    const { title, description, done = 0 } = req.body;
     const [result] = await connection.query(`UPDATE tasks SET title = "${title}", description = "${description}", done = ${done} WHERE taskid = ${req.params.id}`)
     if(result.affectedRows === 0){
       return res.status(404).json({ error: 'Task not found' });

@@ -1,24 +1,62 @@
 import React from 'react'
 import { Form, Formik } from "formik";
 import { useTasks } from '../context/TaskContext';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-const TaskForm = () => {
+function TaskForm() {
 
-    const {createTask} = useTasks();
+    const params = useParams();
+    const navigate = useNavigate();
+
+    const [task, setTask] = useState({
+        title: "",
+        description: ""
+    });
+    const { createTask, loadTask, updateTask } = useTasks();
+
+    useEffect(() => {
+        console.log("builded component");
+        const retrieveData = async () => {
+            if (params.id) {
+                const response = await loadTask(params.id);
+                setTask({
+                    title: response.title,
+                    description: response.description
+                })
+            } else {
+                setTask({
+                    title: "",
+                    description: ""
+                });
+            }
+        };
+        retrieveData();
+    }, []);
+
     return (
         <>
-            <h1>Add a task</h1>
+            <h1>{params.id ? 'Edit task' : 'Add Task'}</h1>
+            {console.log(task)}
             <Formik
-                initialValues={{
-                    title: "",
-                    description: "",
-                }}
-                onSubmit={async (values, actions) => {
-                    createTask(values);
-                    actions.resetForm();
-                }}>
-                {({ handleChange, handleSubmit,values, isSubmitting }) => (
-                    <Form onSubmit={handleSubmit} >
+                initialValues={task}
+                enableReinitialize={true}
+                onSubmit={async (values) => {
+                    if(params.id){
+                        console.log('Updating data...');
+                        await updateTask(params.id, values);
+                        navigate('/');
+                    } else{
+                        await createTask(values);
+                        navigate('/');
+                    }
+                    setTask({
+                        title: "", 
+                        description: ""
+                    })
+                } }>
+                {({ handleChange, handleSubmit, values, isSubmitting }) => (
+                    <Form onSubmit={handleSubmit}>
                         <label>Title*</label>
                         <br />
                         <input
@@ -26,8 +64,7 @@ const TaskForm = () => {
                             name='title'
                             placeholder='Any title'
                             onChange={handleChange}
-                            value={values.title}
-                        />
+                            value={values.title} />
                         <br />
                         <label>Description</label>
                         <br />
@@ -36,8 +73,7 @@ const TaskForm = () => {
                             name='description'
                             placeholder='Any description'
                             onChange={handleChange}
-                            value={values.description}
-                        />
+                            value={values.description} />
                         <br />
                         <button type='submit' disabled={isSubmitting}>
                             {isSubmitting ? 'saving...' : 'Save'}
@@ -46,7 +82,7 @@ const TaskForm = () => {
                 )}
             </Formik>
         </>
-    )
+    );
 }
 
 export default TaskForm

@@ -11,7 +11,8 @@ const App = () => {
       <NavBar />
       <Routes>
         <Route path="/" element={<TaskPages />} />
-        <Route path="/new" element={<TaskForm />} />
+        <Route path="/new" element={<TaskForm key='new-task'/>} />
+        <Route path='/edit/:id' element={<TaskForm key= 'edit-task' />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </TaskContextProvider>

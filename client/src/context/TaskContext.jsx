@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { useState } from "react";
-import { getTasksRequest, deleteTaskRequest, createTaskRequest } from "../API/task.api";
+import { getTasksRequest, getTaskRequest, deleteTaskRequest, createTaskRequest, updateTaskRequest } from "../API/task.api";
 
 export const TaskContext = createContext()
 
@@ -34,6 +34,15 @@ export const useProvideTasks = () => {
         }
     }
 
+    const loadTask = async (id) => {
+        try {
+            const response = await getTaskRequest(id);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const deleteTask = async (id) => {
         try {
             const response = await deleteTaskRequest(id)
@@ -46,9 +55,9 @@ export const useProvideTasks = () => {
 
     const createTask = async (task) => {
         try {
-            if(task.title != ''){
+            if (task.title != '') {
                 const response = await createTaskRequest(task);
-                setTasks([... tasks, response.data])
+                setTasks([...tasks, response.data])
                 console.log(response);
             } else {
                 console.error("El campo titulo no puede estar vacío");
@@ -57,7 +66,15 @@ export const useProvideTasks = () => {
             console.error(error);
         }
     }
+    const updateTask = async (id, newFields) => {
+        try {
+            const response = await updateTaskRequest(id, newFields);
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return {
-        tasks, loadTasks, deleteTask, createTask
+        tasks, loadTasks, loadTask, deleteTask, createTask, updateTask
     }
 }
