@@ -42,7 +42,7 @@ function TaskForm() {
 
     return (
         <>
-            <h1>{params.id ? 'Edit task' : 'Add Task'}</h1>
+            
             {console.log(task)}
             <Formik
                 initialValues={task}
@@ -51,11 +51,10 @@ function TaskForm() {
                     if(params.id){
                         console.log('Updating data...');
                         await updateTask(params.id, values);
-                        navigate('/');
                     } else{
                         await createTask(values);
-                        navigate('/');
                     }
+                    navigate('/');
                     setTask({
                         title: "", 
                         description: "",
@@ -63,26 +62,26 @@ function TaskForm() {
                     })
                 } }>
                 {({ handleChange, handleSubmit, values, isSubmitting }) => (
-                    <Form onSubmit={handleSubmit}>
-                        <label>Title*</label>
-                        <br />
+                    <Form onSubmit={handleSubmit} className="bg-slate-200 max-w-md rounded-md p-4 mx-auto mt-10">
+                        <h1 className='text-xl font-bold uppsercase'>{params.id ? 'Edit task' : 'Add Task'}</h1>
+                        <label className='block text-lg'>Title</label>
                         <input
                             type="text"
                             name='title'
                             placeholder='Any title'
+                            className='px-2 py-1 rounded-sm w-full'
                             onChange={handleChange}
                             value={values.title} />
                         <br />
-                        <label>Description</label>
-                        <br />
+                        <label className='block'>Description</label>
                         <textarea
-                            rows='3'
+                            rows='4'
                             name='description'
                             placeholder='Any description'
                             onChange={handleChange}
+                            className='px-2 py-1 rounded-sm w-full resize-none'
                             value={values.description} />
-                        <br />
-                        <button type='submit' disabled={isSubmitting}>
+                        <button className='block bg-indigo-500 px-2 py-1 text-white w-full rounded-md shadow-lg hover:shadow-blue-500/50' type='submit' disabled={isSubmitting}>
                             {isSubmitting ? 'saving...' : 'Save'}
                         </button>
                     </Form>
