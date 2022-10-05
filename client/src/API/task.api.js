@@ -1,5 +1,5 @@
 import axios from "axios";
-const port = 5000;
+const port = 3000;
 
 export const getTaskRequest = async (id) => {
     return await axios.get("http://localhost:"+port+"/api/tasks/" + id);

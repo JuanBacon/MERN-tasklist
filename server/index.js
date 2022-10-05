@@ -9,7 +9,6 @@ import cors from "cors";
 // crea una aplicacion express 
 const app = express();
 const _dirname = dirname(fileURLToPath(import.meta.url))
-
 console.log(_dirname);
 app.use(cors());
 // usa la funcion json de express para manejar los json en las respuestas del servidor 
