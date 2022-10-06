@@ -6,7 +6,7 @@ const NavBar = () => {
 
     const navigate = useNavigate();
     return (
-        <div className='bg-zinc-800 flex justify-between px-20 py-5'>
+        <div className='bg-zinc-800 flex justify-between px-20 py-5 sticky top-0 z-50'>
             <h1 className='text-white font-bold text-lg'> React MySQL by Juan Bustamante</h1>
             
             <ul className='flex gap-x-3'>

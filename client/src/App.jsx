@@ -7,7 +7,7 @@ import NavBar from './components/NavBar';
 import { TaskContextProvider } from './context/TaskContext';
 const App = () => {
   return (
-    <div className='bg-zinc-900 h-screen'>
+    <div className='bg-zinc-900 min-h-screen'>
       <NavBar />
       <div className="container mx-auto py-4">
       <TaskContextProvider>
